@@ -1,0 +1,92 @@
+<head>
+  <title>Berlin Rationality Dojo</title>
+</head>
+
+<template name="layout">
+  <h1>Berlin Rationality Dojo</h1>
+  {{> yield}}
+  <hr />
+  {{#if currentUser}}
+    {{> userActions}}
+  {{/if}}
+  {{> loginButtons}}
+</template>
+
+<template name="home">
+  {{#if currentUser}}
+    There's nothing on the home page yet.
+  {{else}}
+    Log in to do something!
+  {{/if}}
+</template>
+
+<template name="userActions">
+  <p>
+  <a href="{{pathFor route='groupActivity'}}">Group Activity</a>
+  <br>
+  <a href="{{pathFor route='preferences'}}">Preferences</a>
+  </p>
+</template>
+
+
+<template name="groupActivity">
+  {{#if currentUser}}
+    <p>Who is present?
+    {{> userSelect}}
+    </p>
+
+    <p>Extra people?
+      <input id="extrapeople" type="number" min="0" max="10" value="0">
+    </p>
+
+    <p>Group size?
+      <input id="groupsize" type="number" min="2" max="10" value="2">
+    </p>
+
+    <p><button>Create Groups</button></p>
+
+    <hr />
+
+    <p>Groups:
+    <ul>
+    {{#each groups}}
+      <li>Group
+      <ul>
+      {{#each participants}}
+        <li>{{username}}</li>
+      {{/each}}
+      </ul>
+      </li>
+    {{/each}}
+    </ul>
+    </p>
+  {{else}}
+    You must be logged in.
+  {{/if}}
+</template>
+
+<template name="preferences">
+  {{#if currentUser}}
+  {{#with currentUserData}}
+    <p>Displayed name: {{> editableText collection="UserData" field="username"}}</p>
+    <p>Grouping preferences: {{> userPref}}<br>
+    Click to change. red:1 (unlikely), white:3, green:6 (likely)
+    </p>
+
+  {{/with}}
+  {{else}}
+    You must be logged in.
+  {{/if}}
+</template>
+
+<template name="userSelect">
+  {{#each allUsers}}
+    <div class="userSelectName" style="background-color:{{selectionColor}};">{{username}}</div>
+  {{/each}}
+</template>
+
+<template name="userPref">
+  {{#each otherUsers}}
+    <div class="userPrefName" style="background-color:{{selectionColor}};">{{username}}</div>
+  {{/each}}
+</template>
